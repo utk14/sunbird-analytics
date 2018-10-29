@@ -26,6 +26,6 @@ object Test extends App {
     val session = cluster.connect()
     val query = QB.select().from(Constants.PLATFORML_DB, Constants.JOB_REQUEST).allowFiltering().where(QB.eq("request_id", "requestId")).and(QB.eq("client_key", "clientKey"))
     val resultSet = session.execute(query)
-    println(session.getLoggedKeyspace)
+    println("resultSet.all().size(): "+resultSet.all().size())
     session.close
 }
