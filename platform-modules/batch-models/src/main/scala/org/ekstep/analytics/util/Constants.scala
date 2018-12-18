@@ -77,7 +77,7 @@ object Constants {
     val DIALCODE_USAGE_METRICS_TABLE = "dialcode_usage_metrics"
 
     val ELASTIC_SEARCH_SERVICE_ENDPOINT = AppConf.getConfig("elasticsearch.service.endpoint")
-    val ELASTIC_SEARCH_INDEX_COMPOSITESEARCH_NAME = AppConf.getConfig("elasticsearch.index.compositesearch_name")
+    val ELASTIC_SEARCH_INDEX_COMPOSITESEARCH_NAME = AppConf.getConfig("elasticsearch.index.compositesearch.name")
 
     def getContentList(): String = {
         s"$LP_URL/v2/analytics/content/list";
