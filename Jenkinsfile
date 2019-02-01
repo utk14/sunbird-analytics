@@ -33,6 +33,7 @@ node('build-slave') {
                 #sed -i "s/'replication_factor': '2'/'replication_factor': '1'/g" platform-scripts/database/data.cql
                 rm -rf script
                 mkdir script
+                cp -r platform-scripts/python/main/BusinessMetrics script
                 cp -r platform-scripts/python/main/vidyavaani script
                 cp -r platform-scripts/VidyaVani/GenieSearch script
                 cp -r platform-scripts/VidyaVani/VidyavaniCnQ script
