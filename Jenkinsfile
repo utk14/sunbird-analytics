@@ -1,4 +1,3 @@
-package Build
 node('build-slave') {
     try {
         String ANSI_GREEN = "\u001B[32m"
@@ -27,8 +26,8 @@ node('build-slave') {
 
         stage('Pre-Build') {
             sh '''
-                sed -i "s:>logs<:>/mount/data/analytics/logs/api-service<:g" platform-api/analytics-api/conf/log4j2.xml
-                sed -i "s:/home/analytics/sbin/logs:/mount/data/analytics/logs/api-service:g" platform-api/analytics-api/conf/logback.xml
+                sed -i "s#>logs<#>/mount/data/analytics/logs/api-service<#g" platform-api/analytics-api/conf/log4j2.xml
+                sed -i 's#${application.home:-.}/logs#/mount/data/analytics/logs/api-service#g' platform-api/analytics-api/conf/logback.xml
                 sed -i "s/cassandra.service.embedded.enable=false/cassandra.service.embedded.enable=true/g" platform-api/analytics-api/conf/application.conf
                 sed -i "s/cassandra.service.embedded.enable=false/cassandra.service.embedded.enable=true/g" platform-api/analytics-api-core/src/test/resources/application.conf
                 #sed -i "s/'replication_factor': '2'/'replication_factor': '1'/g" platform-scripts/database/data.cql
