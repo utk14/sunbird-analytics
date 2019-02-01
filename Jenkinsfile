@@ -23,11 +23,11 @@ node('build-slave') {
                 echo "artifact_version: "+ artifact_version
             }
         }
-        
-              stage('Pre-Build') {
-                sh """
+
+        stage('Pre-Build') {
+            sh '''
                 sed -i 's:>logs<:>/mount/data/analytics/logs/api-service<:g' platform-api/analytics-api/conf/log4j2.xml
-                sed -i 's:${application.home\:-.}/logs:/mount/data/analytics/logs/api-service:g' platform-api/analytics-api/conf/logback.xml
+                sed -i 's:${application.home:-.}/logs:/mount/data/analytics/logs/api-service:g' platform-api/analytics-api/conf/logback.xml
                 sed -i "s/cassandra.service.embedded.enable=false/cassandra.service.embedded.enable=true/g" platform-api/analytics-api/conf/application.conf
                 sed -i "s/cassandra.service.embedded.enable=false/cassandra.service.embedded.enable=true/g" platform-api/analytics-api-core/src/test/resources/application.conf
                 #sed -i "s/'replication_factor': '2'/'replication_factor': '1'/g" platform-scripts/database/data.cql
@@ -37,22 +37,22 @@ node('build-slave') {
                 cp -r platform-scripts/VidyaVani/GenieSearch script
                 cp -r platform-scripts/VidyaVani/VidyavaniCnQ script
                 zip -r script.zip script
-                """
-            }
+                '''
+        }
 
-            stage('Build') {
-                 sh '''
+        stage('Build') {
+            sh '''
                 cd platform-framework && mvn clean install -DskipTests=true
                 cd ../platform-modules && mvn clean install -DskipTests
                 cd job-manager && mvn clean package
                 cd ../../platform-api && mvn clean install -DskipTests=true
                 mvn play2:dist -pl analytics-api
                 '''
-            }
+        }
 
 
-            stage('Archive artifacts'){
-                sh """
+        stage('Archive artifacts'){
+            sh """
                         mkdir lpa_artifacts
                         cp platform-framework/analytics-job-driver/target/analytics-framework-1.0.jar lpa_artifacts
                         cp platform-modules/batch-models/target/batch-models-1.0.jar lpa_artifacts
@@ -61,12 +61,12 @@ node('build-slave') {
                         cp script.zip lpa_artifacts
                         zip -j lpa_artifacts.zip:${artifact_version} lpa_artifacts/*
                     """
-                archiveArtifacts artifacts: "lpa_artifacts.zip:${artifact_version}", fingerprint: true, onlyIfSuccessful: true
-                sh """echo {\\"artifact_name\\" : \\"lpa_artifacts.zip\\", \\"artifact_version\\" : \\"${artifact_version}\\", \\"node_name\\" : \\"${env.NODE_NAME}\\"} > metadata.json"""
-                archiveArtifacts artifacts: 'metadata.json', onlyIfSuccessful: true
-                 currentBuild.description = artifact_version
-            }
+            archiveArtifacts artifacts: "lpa_artifacts.zip:${artifact_version}", fingerprint: true, onlyIfSuccessful: true
+            sh """echo {\\"artifact_name\\" : \\"lpa_artifacts.zip\\", \\"artifact_version\\" : \\"${artifact_version}\\", \\"node_name\\" : \\"${env.NODE_NAME}\\"} > metadata.json"""
+            archiveArtifacts artifacts: 'metadata.json', onlyIfSuccessful: true
+            currentBuild.description = artifact_version
         }
+    }
 
     catch (err) {
         currentBuild.result = "FAILURE"
