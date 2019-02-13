@@ -30,7 +30,7 @@ object ESToRedisIndexer {
             // redis settings
             .set("spark.redis.host", config.getString("redis.host"))
             .set("spark.redis.port", config.getString("redis.port"))
-            .set("spark.redis.db", config.getString("redis.database.index"))
+            .set("spark.redis.db", config.getString("redis.es.database.index"))
             .set("spark.redis.max.pipeline.size", config.getString("redis.max.pipeline.size"))
 
         val sc = new SparkContext(conf)

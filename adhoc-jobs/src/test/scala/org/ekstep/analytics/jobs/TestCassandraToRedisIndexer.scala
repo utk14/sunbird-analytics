@@ -6,6 +6,6 @@ class TestCassandraToRedisIndexer extends FlatSpec with Matchers with BeforeAndA
 
     "cassandra indexer" should  "index user data to redis" in {
         println(s"======> Starting Redis indexing job <=======")
-        CassandraToRedisIndexer.main(Array())
+        //CassandraToRedisIndexer.main(Array())
     }
 }

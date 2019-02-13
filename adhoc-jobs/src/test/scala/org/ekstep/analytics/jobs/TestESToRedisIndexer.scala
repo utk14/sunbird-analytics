@@ -6,6 +6,6 @@ class TestESToRedisIndexer extends FlatSpec with Matchers with BeforeAndAfterAll
 
     "main method" should  "run" in {
         println(s"======> Starting Redis indexing job <=======")
-        ESToRedisIndexer.main(Array())
+        //ESToRedisIndexer.main(Array())
     }
 }
