@@ -5,6 +5,8 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.ekstep.analytics.util.JSONUtils
 import org.elasticsearch.spark._
+import scala.collection.JavaConversions._
+import scala.collection.Map
 
 object ESToRedisIndexer {
 
@@ -34,12 +36,17 @@ object ESToRedisIndexer {
             .set("spark.redis.max.pipeline.size", config.getString("redis.max.pipeline.size"))
 
         val sc = new SparkContext(conf)
-        val key = config.getString("elasticsearch.index.source.key")
+        val keys = config.getStringList("elasticsearch.index.source.keys").toList
+        val keyDelimiter = config.getString("elasticsearch.index.source.keyDelimiter")
 
         // todo: log details
+        def getKey(data: String): String = {
+            val record = JSONUtils.deserialize[Map[String, AnyRef]](data)
+            keys.map(value => record(value)).mkString(keyDelimiter)
+        }
 
         sc.toRedisKV(
-            sc.esRDD(index).map(data => (data._2(key).asInstanceOf[String], JSONUtils.serialize(data._2)))
+            sc.esJsonRDD(index).map(data => (getKey(data._2), data._2))
         )
     }
 }

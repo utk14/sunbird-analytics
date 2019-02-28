@@ -14,6 +14,7 @@ object JSONUtils {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     mapper.setSerializationInclusion(Include.NON_NULL);
 
     @throws(classOf[Exception])
