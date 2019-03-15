@@ -111,6 +111,13 @@
             <version>2.1.0</version>
             <!--<scope>provided</scope>-->
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.sunbird/cloud-store-sdk -->
+        <dependency>
+            <groupId>org.sunbird</groupId>
+            <artifactId>cloud-store-sdk</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -166,6 +173,14 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.jclouds.apis.ApiMetadata</resource>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.jclouds.providers.ProviderMetadata</resource>
+                        </transformer>
+                    </transformers>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
